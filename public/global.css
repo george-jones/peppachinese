@@ -73,9 +73,15 @@ a {
 	font-size: 64px;
 	vertical-align: text-bottom;
 	cursor: pointer;
+	position: absolute;
+	left: -64px;
+	top: -64px;
 }
 
-.control-btn.disabled {
-	cursor: not-allowed;
-	opacity: 0.05;
+.error {
+	font-size: 36px;
+	text-align: center;
+	background-color: #a44;
+	color: black;
+	border-radius: 4px;
 }

@@ -52,7 +52,7 @@
 </svelte:head>
 
 <div id="content">
-	<Video num="000" name="ch" />
+	<Video num="000" />
 </div>
 
 {#if $testingMode}
