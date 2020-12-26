@@ -54,13 +54,15 @@
 
 <script>
 import { rand } from '../rand.js';
+import { pinyinString } from '../pinyin.js';
+import { testingMode } from '../globals.js';
 export let num;
 
 const fs = require('fs');
 const path = require('path');
 
 let clips = [ ];
-let clip_num = 1;
+let clip_num = 0;
 let is_english = false;
 let asking = false;
 let answered = false;
@@ -86,10 +88,6 @@ function playTextSet() {
 	}
 }
 
-function pinyinTonify(txt) {
-	return txt;
-}
-
 function ask() {
 	let clip = clips[clip_num];
 	let fixDisplay;
@@ -101,7 +99,7 @@ function ask() {
 
 	if (clip.type == 's') {
 		prompt = 'What sound is this?';
-		fixDisplay = pinyinTonify;
+		fixDisplay = pinyinString;
 	} else if (clip.type == 'm') {
 		prompt = 'What does this mean?';
 		fixDisplay = function (txt) { return txt; };
@@ -125,7 +123,6 @@ function playPauseToggle() {
 	if (!vc) {
 		vc = this.parentNode.parentNode;
 		vid = vc.children[0];
-		vid.currentTime = Math.floor(clips[clip_num].start / 1000);
 	}
 
 	if (asking) {
@@ -145,13 +142,17 @@ function playPauseToggle() {
 		vid.pause();
 		window.clearInterval(interval_idx);
 	} else {
-		interval_idx = window.setInterval(function () {
-			let current_ms = Math.floor(vid.currentTime * 1000);
-			if (current_ms >= clips[clip_num].ask_time) {
-				playPauseToggle();
-				ask();
-			}
-		}, 50);
+		if (clips[clip_num]) {
+			interval_idx = window.setInterval(function () {
+				let current_ms = Math.floor(vid.currentTime * 1000);
+				if (current_ms >= clips[clip_num].ask_time) {
+					playPauseToggle();
+					ask();
+				}
+			}, 50);
+		} else {
+			// TODO: set up event for video ending
+		}
 
 		vid.play();
 	}
@@ -185,6 +186,12 @@ function clickOption() {
 	}
 }
 
+function jumpToNext() {
+	if (clips[clip_num]) {
+		vid.currentTime = Math.floor(clips[clip_num].start / 1000);
+	}
+}
+
 setup();
 
 </script>
@@ -195,6 +202,11 @@ setup();
 		<span class="control-btn" on:click="{playPauseToggle}">{play_text}</span>
 	</span>
 </div>
+
+{#if $testingMode}
+<input type="button" value="Next" on:click="{jumpToNext}">
+{/if}
+
 {#if asking}
 <div class="center-child">
 	<div id="asking" class="{asking_class}">
