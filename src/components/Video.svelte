@@ -42,6 +42,14 @@
 	cursor: pointer;
 }
 
+#asking.show-results .incorrect {
+	background-color: #c46354;
+}
+
+#asking.show-results .correct {
+	background-color: #54c48e;
+}
+
 </style>
 
 <script>
@@ -52,9 +60,10 @@ const fs = require('fs');
 const path = require('path');
 
 let clips = [ ];
-let clip_num = 0;
+let clip_num = 1;
 let is_english = false;
 let asking = false;
+let answered = false;
 let video_class = 'nocontrol';
 let full_name = num + '/' + (is_english? 'en' : 'ch') + '.mp4';
 let audio_src = '';
@@ -67,6 +76,7 @@ let vid;
 let options = [ ];
 let prompt = '';
 let correct_answer = '';
+let asking_class = '';
 
 function playTextSet() {
 	if (playing) {
@@ -76,33 +86,56 @@ function playTextSet() {
 	}
 }
 
+function pinyinTonify(txt) {
+	return txt;
+}
+
 function ask() {
 	let clip = clips[clip_num];
+	let fixDisplay;
 
 	asking = true;
+	answered = false;
 	video_class = 'nocontrol';
 	vid.pause();
 
 	if (clip.type == 's') {
 		prompt = 'What sound is this?';
+		fixDisplay = pinyinTonify;
 	} else if (clip.type == 'm') {
 		prompt = 'What does this mean?';
+		fixDisplay = function (txt) { return txt; };
 	} else {
 		err = 'Unrecognized clip type: ' + clip.type;
 	}
 
 	// first option is always the right answer
 	correct_answer = clip.options[0];
-	options = rand.shuffle(clip.options);
+	options = rand.shuffle(clip.options).map(function (option) {
+		return {
+			"value": option,
+			"display": fixDisplay(option),
+			"optClass": (option == correct_answer)? "correct": "incorrect"
+		}
+	});
 	audio_src =  num + '/' + clip.filename;
 }
 
 function playPauseToggle() {
-	vc = this.parentNode.parentNode;
-	vid = vc.children[0];
+	if (!vc) {
+		vc = this.parentNode.parentNode;
+		vid = vc.children[0];
+		vid.currentTime = Math.floor(clips[clip_num].start / 1000);
+	}
 
 	if (asking) {
-		return;
+		if (answered) {
+			clip_num++;
+			asking = false;
+			asking_class = '';
+		} else {
+			return;
+		}
 	}
 
 	playing = !playing;
@@ -115,11 +148,11 @@ function playPauseToggle() {
 		interval_idx = window.setInterval(function () {
 			let current_ms = Math.floor(vid.currentTime * 1000);
 			if (current_ms >= clips[clip_num].ask_time) {
-				clearInterval(interval_idx);
+				playPauseToggle();
 				ask();
 			}
 		}, 50);
-		vid.currentTime = Math.floor(clips[clip_num].start / 1000);
+
 		vid.play();
 	}
 }
@@ -141,11 +174,14 @@ function playSound() {
 }
 
 function clickOption() {
-	let answered = this.firstChild.nodeValue;
-	if (correct_answer == answered) {
-		console.log('yep');
+	let my_answer = this.getAttribute('optionvalue');
+	asking_class = 'show-results';
+	video_class = '';
+	answered = true;
+	if (correct_answer == my_answer) {
+		// TODO: keep score
 	} else {
-		console.log(correct_answer, answered);
+		// TODO: keep score
 	}
 }
 
@@ -161,11 +197,13 @@ setup();
 </div>
 {#if asking}
 <div class="center-child">
-	<div id="asking">
+	<div id="asking" class="{asking_class}">
 		<div class="prompt">{prompt} <span id="playSound" on:click="{playSound}">🔊</span></div>
 		<ul>
 		{#each options as option}
-			<li on:click="{clickOption}">{option}</li>
+			<li on:click="{clickOption}" class="{option.optClass}" optionvalue="{option.value}">
+				{option.display}
+			</li>
 		{/each}
 		</ul>
 	</div>
