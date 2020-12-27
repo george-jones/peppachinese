@@ -29,16 +29,10 @@
 <script>
 	const { ipcRenderer } = require('electron');
 
-	import Week from './components/Week.svelte';
 	import Video from './components/Video.svelte';
-	import { weeks } from './weeks.js';
 	import { testingMode } from './globals.js';
 	
 	let weekName;
-
-	function loadWeek (evt) {
-		weekName = evt.currentTarget.getAttribute('data-week');
-	}
 
 	ipcRenderer.on('toggletestmode', (event, message) => {
 		testingMode.update(function (v) {
@@ -52,7 +46,7 @@
 </svelte:head>
 
 <div id="content">
-	<Video num="000" />
+	<Video />
 </div>
 
 {#if $testingMode}

@@ -56,29 +56,31 @@
 import { rand } from '../rand.js';
 import { pinyinString } from '../pinyin.js';
 import { testingMode } from '../globals.js';
-export let num;
+import { thisWeek } from '../globals.js';
 
 const fs = require('fs');
-const path = require('path');
 
-let clips = [ ];
-let clip_num = 0;
-let is_english = false;
-let asking = false;
-let answered = false;
-let video_class = 'nocontrol';
-let full_name = num + '/' + (is_english? 'en' : 'ch') + '.mp4';
-let audio_src = '';
-let play_text = '';
-let playing = false;
-let err = null;
-let interval_idx = -1;
+let step_num = 0;
+let num;
+let clips;
+let clip_num;
+let is_english;
+let asking;
+let answered;
+let video_class;
+let full_name;
+let audio_src;
+let play_text;
+let playing;
+let err;
+let interval_idx;
 let vc;
 let vid;
-let options = [ ];
-let prompt = '';
-let correct_answer = '';
-let asking_class = '';
+let options;
+let prompt;
+let correct_answer;
+let asking_class;
+let answers;
 
 function playTextSet() {
 	if (playing) {
@@ -142,7 +144,7 @@ function playPauseToggle() {
 		vid.pause();
 		window.clearInterval(interval_idx);
 	} else {
-		if (clips[clip_num]) {
+		if (!is_english && clips[clip_num]) {
 			interval_idx = window.setInterval(function () {
 				let current_ms = Math.floor(vid.currentTime * 1000);
 				if (current_ms >= clips[clip_num].ask_time) {
@@ -151,14 +153,46 @@ function playPauseToggle() {
 				}
 			}, 50);
 		} else {
-			// TODO: set up event for video ending
+			vid.addEventListener('ended', endHandler, false);
 		}
 
 		vid.play();
 	}
 }
 
+function endHandler() {
+	step_num++;
+	if (step_num >= thisWeek.length) {
+		done();
+	} else {
+		setup();
+	}
+}
+
 function setup() {
+	let step = thisWeek[step_num];
+	num = step.num;
+
+	clips = [ ];
+	clip_num = 13;
+	is_english = (step.lang === 'en');
+	asking = false;
+	answered = false;
+	video_class = 'nocontrol';
+	full_name = num + '/' + step.lang + '.mp4';
+	audio_src = '';
+	play_text = '';
+	playing = false;
+	err = null;
+	interval_idx = -1;
+	vc;
+	vid;
+	options = [ ];
+	prompt = '';
+	correct_answer = '';
+	asking_class = '';
+	answers = [ ];
+
 	try {
 		let data = fs.readFileSync('public/' + num + '/data.json');
 		clips = JSON.parse(data).clips;
@@ -170,20 +204,29 @@ function setup() {
 	}
 }
 
+function done() {
+	// TODO
+}
+
 function playSound() {
 	vc.children[1].play();
 }
 
 function clickOption() {
 	let my_answer = this.getAttribute('optionvalue');
+	let a = { };
+
 	asking_class = 'show-results';
 	video_class = '';
 	answered = true;
+	a.correct_answer = correct_answer;
+	a.my_answer = my_answer;
 	if (correct_answer == my_answer) {
-		// TODO: keep score
+		a.correct = true;
 	} else {
-		// TODO: keep score
+		a.correct = false;
 	}
+	answers.push(a);
 }
 
 function jumpToNext() {
@@ -193,8 +236,8 @@ function jumpToNext() {
 }
 
 setup();
-
 </script>
+
 <div id="video-container" class="{video_class}">
 	<video src="{full_name}" width="1024" height="576" />
 	<audio id="audio" src="{audio_src}" />
