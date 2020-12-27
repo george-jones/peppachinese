@@ -1,0 +1,17 @@
+{ "clips": [
+	{ "filename": "000.mp3", "type": "m", "start": 26160, "end": 26520, "ask_time": 28120, "options": [ "Peppa", "swimming", "tornado", "elephant" ] },
+	{ "filename": "001.mp3", "type": "s", "start": 40400, "end": 40560, "ask_time": 42360, "options": [ "wo3", "gou3", "wa3", "chou3" ] },
+	{ "filename": "002.mp3", "type": "m", "start": 60720, "end": 61240, "ask_time": 61680, "options": [ "Daddy", "chair", "fly", "George" ] },
+	{ "filename": "003.mp3", "type": "s", "start": 82800, "end": 83200, "ask_time": 83480, "options": [ "jie2", "tie2", "bie2", "ga2" ] },
+	{ "filename": "004.mp3", "type": "s", "start": 100960, "end": 101320, "ask_time": 101880, "options": [ "na2", "pa2", "la2", "tuo2" ] },
+	{ "filename": "005.mp3", "type": "m", "start": 117120, "end": 117720, "ask_time": 118080, "options": [ "George", "sky", "good", "train" ] },
+	{ "filename": "006.mp3", "type": "s", "start": 138520, "end": 138800, "ask_time": 139040, "options": [ "duo1", "da1", "dong1", "cha1" ] },
+	{ "filename": "007.mp3", "type": "s", "start": 153960, "end": 154240, "ask_time": 155320, "options": [ "pao4", "nao4", "lao4", "qing4" ] },
+	{ "filename": "008.mp3", "type": "m", "start": 171360, "end": 171960, "ask_time": 172400, "options": [ "Mommy", "thank you", "eat", "squid" ] },
+	{ "filename": "009.mp3", "type": "s", "start": 179080, "end": 179360, "ask_time": 179520, "options": [ "ba4", "na4", "bu4", "kong4" ] },
+	{ "filename": "010.mp3", "type": "m", "start": 203880, "end": 204880, "ask_time": 205120, "options": [ "thank you", "goodbye", "hello", "squirrel" ] },
+	{ "filename": "011.mp3", "type": "s", "start": 216760, "end": 217040, "ask_time": 217520, "options": [ "qi4", "mu4", "fa4", "tou4" ] },
+	{ "filename": "012.mp3", "type": "s", "start": 236000, "end": 236160, "ask_time": 237640, "options": [ "ni3", "bi3", "na3", "ku3" ] },
+	{ "filename": "013.mp3", "type": "m", "start": 249000, "end": 250000, "ask_time": 252600, "options": [ "too bad", "good morning", "pancake", "dog" ] },
+	{ "filename": "014.mp3", "type": "s", "start": 263200, "end": 263320, "ask_time": 263840, "options": [ "da4", "ma4", "ding4", "zhong4" ] }
+] }
