@@ -11,7 +11,7 @@
 	{ "filename": "009.mp3", "type": "s", "start": 179080, "end": 179360, "ask_time": 179520, "options": [ "ba4", "na4", "bu4", "kong4" ] },
 	{ "filename": "010.mp3", "type": "m", "start": 203880, "end": 204880, "ask_time": 205120, "options": [ "thank you", "goodbye", "hello", "squirrel" ] },
 	{ "filename": "011.mp3", "type": "s", "start": 216760, "end": 217040, "ask_time": 217520, "options": [ "qi4", "mu4", "fa4", "tou4" ] },
-	{ "filename": "012.mp3", "type": "s", "start": 236000, "end": 236160, "ask_time": 237640, "options": [ "ni3", "bi3", "na3", "ku3" ] },
+	{ "filename": "012.mp3", "type": "s", "start": 236800, "end": 237000, "ask_time": 237640, "options": [ "zhu1", "shu1", "cha1", "mu1" ] },
 	{ "filename": "013.mp3", "type": "m", "start": 249000, "end": 250000, "ask_time": 252600, "options": [ "too bad", "good morning", "pancake", "dog" ] },
 	{ "filename": "014.mp3", "type": "s", "start": 263200, "end": 263320, "ask_time": 263840, "options": [ "da4", "ma4", "ding4", "zhong4" ] }
 ] }
