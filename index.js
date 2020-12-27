@@ -11,7 +11,7 @@ const createWindow = () => {
 		webPreferences: {
 			nodeIntegration: true
 		},
-		icon: path.join(__dirname, 'pa.ico')
+		icon: path.join(__dirname, 'p.ico')
 	});
 
 	//window.removeMenu();
