@@ -60,15 +60,20 @@
 </style>
 
 <script>
+const electron = require('electron');
+const net = electron.remote.net;
+
 import { rand } from '../rand.js';
 import { pinyinString } from '../pinyin.js';
 import { testingMode } from '../globals.js';
 import { thisWeek } from '../globals.js';
-
+import { jsonStoreURL } from '../globals.js';
 const fs = require('fs');
 
+let user = require('os').userInfo();
+
 let step_num = 0;
-let done = true;
+let done = false;
 let num;
 let clips;
 let clip_num;
@@ -182,7 +187,7 @@ function setup() {
 	num = step.num;
 
 	clips = [ ];
-	clip_num = 13;
+	clip_num = 14;
 	is_english = (step.lang === 'en');
 	asking = false;
 	answered = false;
@@ -235,12 +240,49 @@ function clickOption() {
 		a.correct = false;
 	}
 	answers.push(a);
+
+	// immediately after answering final question, send report. Don't wait for the end of the video.
+	if (clip_num == clips.length - 1) {
+		send_report();
+	}
 }
 
 function jumpToNext() {
-	if (clips[clip_num]) {
-		vid.currentTime = Math.floor(clips[clip_num].start / 1000);
+	if (is_english) {
+		vid.currentTime = vid.duration - 1;
+	} else {
+		if (clips[clip_num]) {
+			vid.currentTime = Math.floor(clips[clip_num].start / 1000);
+		}
 	}
+}
+
+function send_report() {
+	
+	var report = {
+		"num": num,
+		"user": user.username,
+		"answers": answers
+	}
+	const data = JSON.stringify(report);
+	const options = {
+		url: jsonStoreURL,
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	};
+	const req = net.request(options, res => {
+		console.log(`statusCode: ${res.statusCode}`)
+		res.on('data', d => {
+			console.log(d);
+		});
+	})
+	req.on('error', error => {
+		console.error(error);
+	});
+	req.write(data);
+	req.end();
 }
 
 setup();
