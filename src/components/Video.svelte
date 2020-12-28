@@ -260,6 +260,7 @@ function jumpToNext() {
 function send_report() {
 	
 	var report = {
+		"type": "peppachinese",
 		"num": num,
 		"user": user.username,
 		"answers": answers
