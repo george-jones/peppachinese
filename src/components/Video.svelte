@@ -50,6 +50,13 @@
 	background-color: #54c48e;
 }
 
+#done {
+	margin-top: 100px;
+	font-size: 96px;
+	text-align: center;
+	background-color: #54c48e;
+	border-radius: 30px;
+}
 </style>
 
 <script>
@@ -61,6 +68,7 @@ import { thisWeek } from '../globals.js';
 const fs = require('fs');
 
 let step_num = 0;
+let done = true;
 let num;
 let clips;
 let clip_num;
@@ -163,7 +171,7 @@ function playPauseToggle() {
 function endHandler() {
 	step_num++;
 	if (step_num >= thisWeek.length) {
-		done();
+		all_done();
 	} else {
 		setup();
 	}
@@ -204,8 +212,8 @@ function setup() {
 	}
 }
 
-function done() {
-	// TODO
+function all_done() {
+	done = true;
 }
 
 function playSound() {
@@ -238,31 +246,35 @@ function jumpToNext() {
 setup();
 </script>
 
-<div id="video-container" class="{video_class}">
-	<video src="{full_name}" width="1024" height="576" />
-	<audio id="audio" src="{audio_src}" />
-	<span style="position: relative">
-		<span class="control-btn" on:click="{playPauseToggle}">{play_text}</span>
-	</span>
-</div>
-
-{#if $testingMode}
-<input type="button" value="Next" on:click="{jumpToNext}">
-{/if}
-
-{#if asking}
-<div class="center-child">
-	<div id="asking" class="{asking_class}">
-		<div class="prompt">{prompt} <span id="playSound" on:click="{playSound}">🔊</span></div>
-		<ul>
-		{#each options as option}
-			<li on:click="{clickOption}" class="{option.optClass}" optionvalue="{option.value}">
-				{option.display}
-			</li>
-		{/each}
-		</ul>
+{#if done}
+	<div id="done">All done!</div>
+{:else}
+	<div id="video-container" class="{video_class}">
+		<video src="{full_name}" width="1024" height="576" />
+		<audio id="audio" src="{audio_src}" />
+		<span style="position: relative">
+			<span class="control-btn" on:click="{playPauseToggle}">{play_text}</span>
+		</span>
 	</div>
-</div>
+
+	{#if $testingMode}
+	<input type="button" value="Next" on:click="{jumpToNext}">
+	{/if}
+
+	{#if asking}
+	<div class="center-child">
+		<div id="asking" class="{asking_class}">
+			<div class="prompt">{prompt} <span id="playSound" on:click="{playSound}">🔊</span></div>
+			<ul>
+			{#each options as option}
+				<li on:click="{clickOption}" class="{option.optClass}" optionvalue="{option.value}">
+					{option.display}
+				</li>
+			{/each}
+			</ul>
+		</div>
+	</div>
+	{/if}
 {/if}
 
 {#if err}
