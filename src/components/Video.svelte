@@ -323,7 +323,7 @@ setup();
 	<div id="done">All done!</div>
 {:else}
 	<div id="video-container" class="{video_class}">
-		<video src="{full_name}" width="1024" height="576" />
+		<video src="{full_name}" width="960" height="540" />
 		<audio id="audio" src="{audio_src}" />
 		<span style="position: relative">
 			<span class="control-btn" on:click="{playPauseToggle}">{play_text}</span>

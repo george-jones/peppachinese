@@ -1,7 +1,7 @@
 <style>
 #content {
 	background-color: #548ac4;
-	padding: 15px;
+	padding: 0;
 }
 
 #content li {
