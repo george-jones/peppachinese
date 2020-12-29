@@ -67,12 +67,12 @@ const path = require('path')
 import { rand } from '../rand.js';
 import { pinyinString } from '../pinyin.js';
 import { testingMode } from '../globals.js';
-import { thisWeek } from '../globals.js';
 import { jsonStoreURL } from '../globals.js';
 const fs = require('fs');
+const { readdirSync } = require('fs');
 
 let user = require('os').userInfo();
-
+let thisWeek = [ ];
 let step_num = 0;
 let done = false;
 let num;
@@ -84,7 +84,7 @@ let answered;
 let video_class;
 let full_name;
 let audio_src;
-let play_text;
+let play_text = '';
 let playing;
 let err;
 let interval_idx;
@@ -95,6 +95,11 @@ let prompt;
 let correct_answer;
 let asking_class;
 let answers;
+
+const getNumDirectories = source =>
+	readdirSync(source, { withFileTypes: true })
+		.filter(dirent => dirent.isDirectory() && dirent.name.match(/\d{3}/))
+		.map(dirent => dirent.name)
 
 function playTextSet() {
 	if (playing) {
@@ -183,8 +188,31 @@ function endHandler() {
 	}
 }
 
+function getThisWeek() {
+	let dirs = getNumDirectories(__dirname).sort();
+
+	if (dirs.length == 0) {
+		err = "No data directories found!";
+	} else if (dirs.length == 1) {
+		thisWeek = [
+			{ "num": dirs[0], "lang": "ch" }
+		];
+	} else {
+		// use the last 2 videos from the list
+		thisWeek = [
+			{ "num": dirs[dirs.length - 1], "lang": "ch" },
+			{ "num": dirs[dirs.length - 2], "lang": "en" },
+			{ "num": dirs[dirs.length - 2], "lang": "ch" }
+		];
+	}
+
+}
+
 function setup() {
 	let step = thisWeek[step_num];
+	if (!step) {
+		return;
+	}
 	num = step.num;
 
 	clips = [ ];
@@ -260,7 +288,6 @@ function jumpToNext() {
 }
 
 function send_report() {
-	
 	var report = {
 		"type": "peppachinese",
 		"num": num,
@@ -288,6 +315,7 @@ function send_report() {
 	req.end();
 }
 
+getThisWeek();
 setup();
 </script>
 
