@@ -187,7 +187,7 @@ function setup() {
 	num = step.num;
 
 	clips = [ ];
-	clip_num = 14;
+	clip_num = 0;
 	is_english = (step.lang === 'en');
 	asking = false;
 	answered = false;
@@ -234,6 +234,7 @@ function clickOption() {
 	answered = true;
 	a.correct_answer = correct_answer;
 	a.my_answer = my_answer;
+	a.question_type = clips[clip_num].type;
 	if (correct_answer == my_answer) {
 		a.correct = true;
 	} else {
