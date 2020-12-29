@@ -62,6 +62,7 @@
 <script>
 const electron = require('electron');
 const net = electron.remote.net;
+const path = require('path')
 
 import { rand } from '../rand.js';
 import { pinyinString } from '../pinyin.js';
@@ -207,7 +208,7 @@ function setup() {
 	answers = [ ];
 
 	try {
-		let data = fs.readFileSync('public/' + num + '/data.json');
+		let data = fs.readFileSync(path.join(__dirname, num + '/data.json'));
 		clips = JSON.parse(data).clips;
 		playTextSet();
 		video_class = '';
